@@ -43,12 +43,3 @@ module.exports ={
   console.log(err);
 });
 */
-// extIP.get().then(ip => {
-//     console.log(ip);
-//     //var ip = "108.170.137.131";
-// var geo = geoip.lookup(ip);
-// console.log(geo);
-//
-// }, err => {
-//     console.error(err);
-// });
