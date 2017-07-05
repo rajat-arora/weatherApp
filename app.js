@@ -18,6 +18,12 @@ const argv = yargs
       describe: 'Type in ip to geolocate an ip',
       string: true,
       requiresArg: true
+    },
+    f:{
+      demand:false,
+      alias: 'locate',
+      describe: 'Find me',
+      requiresArg: false
     }
   })
   .help()//alias for help
@@ -52,9 +58,30 @@ var searchByAddress = (geocodeUrl) => {
 });
 };
 
-var findByIP = (ip) => {
-  geo.getExtIP.then((res)=>{
+var findByGeo = ()=> { geo.getExtIP.then((res)=>{
     //console.log(res);
+    var lat = res.geo.ll[0];
+    var lng = res.geo.ll[1];
+    var weatherUrl = `https://api.darksky.net/forecast/6953ec32700cc97bd56f8e8521a79247/${lat},${lng}?units=ca`;
+    console.log(`The nearest location is ${res.geo.city}, ${res.geo.region}, ${res.geo.country}`);
+    //console.log(res.data.results[0].formatted_address);
+    return axios.get(weatherUrl);
+  }).then((response)=>{
+    var temperature = response.data.currently.temperature;
+    var apparentTemperature = response.data.currently.apparentTemperature;
+    console.log(`It's currently ${temperature}. It feels like ${apparentTemperature}`);
+  }).catch((e)=>{
+    if(e.code === 'ENOTFOUND'){
+      console.log('Unable to connect to API servers.');
+    }else{
+      console.log(e.message);
+    }
+    console.log(e);
+  });
+};
+
+var findByIP = (ip) =>{
+  geo.getLocation(ip).then((res)=>{
     var lat = res.geo.ll[0];
     var lng = res.geo.ll[1];
     var weatherUrl = `https://api.darksky.net/forecast/6953ec32700cc97bd56f8e8521a79247/${lat},${lng}?units=ca`;
@@ -84,6 +111,10 @@ if(argv.address){
   let ipAddress = argv.ip;
   findByIP(argv.ip);
   //findByIP("108.170.137.191");
+}else if (argv.f){
+  findByGeo();
+}else{
+  console.log("You haven't entered any flag. Type --help for more help.");
 }
 
 //load more information
