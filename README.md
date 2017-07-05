@@ -3,9 +3,8 @@ A weather app that can determine your geolocation and return the weather
 
 IE: 
 
-Your address is: 123 Fake Street Florida, USA
-
-It's currently 33.32. It feels like 37.57
+> Your address is: 123 Fake Street Florida, USA
+> It's currently 33.32. It feels like 37.57
 
 
 ## Options
